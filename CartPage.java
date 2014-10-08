@@ -5,47 +5,52 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 
-public class CatalogPage extends HttpServlet {
+public class CartPage extends HttpServlet {
+  private String item;
   private String title;
-  private HashMap catalog;
-
-  private void populateHashMap(){
-    catalog.put("Droid MAXX", "Phones");
-    catalog.put("Moto X", "Phones");
-    catalog.put("iPhone 5S", "Phones");
-    catalog.put("iPhone 5C", "Phones");
-    catalog.put("Galaxy S3", "Phones");
-    catalog.put("Galaxy S4", "Phones");
-
-    catalog.put("Kindle", "Tablets");
-    catalog.put("Nexus", "Tablets");
-    catalog.put("Surface", "Tablets");
-    catalog.put("Galaxy", "Tablets");
-    catalog.put("iPad", "Tablets");
-    
-    catalog.put("MacBook", "Laptop");
-    catalog.put("Asus", "Laptop");
-    catalog.put("Sony", "Laptop");
-    catalog.put("Lenovo", "Laptop");
-
-    catalog.put("Panasonic", "TV");
-    catalog.put("Samsung", "TV");
-    catalog.put("Sony", "TV");
-  }
   
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    catalog = new HashMap();
-
-    populateHashMap();
-
-    HttpSession session = request.getSession(true);
-
+  public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     
-    title = request.getParameter("product");
+    PrintWriter out = response.getWriter();
+    title = "Shopping Cart";
+
+    item = request.getParameter("item");
+
+    String[] justItem = item.split("\\s+");
+    if(justItem.length == 2) item = justItem[1];
+    else item = justItem[1] + justItem[2];
+    out.println("item = " + item);
+    HttpSession session = request.getSession(true);
+    Integer countOrder = (Integer)session.getAttribute(item);
+
+    if (countOrder == null) {
+        countOrder = new Integer(1);
+    } else {
+      countOrder = new Integer(countOrder.intValue() + 1);
+    }
+    session.setAttribute(item, countOrder);
+    out.println("countOrder = " + countOrder);
+
+    String cartElements = (String)session.getAttribute("cart");
+    if (cartElements == null) {
+        cartElements = new String(item);
+    } else {
+        Boolean newItem = true;
+        String delims = "[|]";
+        String[] tokens = cartElements.split(delims);
+        for(int i = 0; i < tokens.length; i++){
+            if(item.compareTo(tokens[i]) == 0){
+                newItem = false;
+                break;
+            }
+        }
+        if(newItem) cartElements = new String(item + "|" + cartElements);
+    }
+    session.setAttribute("cart", cartElements);
+    out.println("cartElements = " + cartElements);
     
     response.setContentType("text/html");
-    PrintWriter out = response.getWriter();
+    
     String docType = "<!DOCTYPE html>";
     out.println(docType +
         "<html>\n" +
@@ -107,24 +112,23 @@ public class CatalogPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
-
-    Set set = catalog.entrySet();
-    Iterator i = set.iterator();
-
     
-    out.println("<form action=\"/ecom/CartPage\">");
-    out.println("<table border=\"1\"");
-      while(i.hasNext()) {
-         Map.Entry me = (Map.Entry)i.next();
-         String comp = (String)me.getValue();
-         if(title.compareTo(comp) == 0){
-            out.println("<tr>\n<td>");
-            out.println("<img src=\"img/" + ((String)me.getKey()).replaceAll("\\s+","") + ".jpg\" alt=\"" + ((String)me.getKey()) + "\" width=\"50\" heigth=\"50\" >");
-            out.println("</td>\n<td>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + ((String)me.getKey()) + "\">\n");
-            out.println("</td>\n</tr>");
-         }
-      }
+    out.println("<form action=\"/ecom/Checkout\">");
+    out.println("<table border=\"1\">");
+    String delims = "[|]";
+    String[] tokens = cartElements.split(delims);
+    for (int i = 0; i < tokens.length; i++){
+      out.println("<tr>\n<td>");
+      out.println("<img src=\"img/" + tokens[i] + ".jpg\" alt=\"" + tokens[i] + "\" width=\"50\" heigth=\"50\" >");
+      out.println("</td>\n<td>");
+      out.println((Integer)session.getAttribute(tokens[i]));
+      out.println("</td>\n<td>");
+      out.println("<input id=\"buybutton\" type=\"submit\" name =\"" + tokens[i] + "\" VALUE=\"Remove\">\n");
+      out.println("</td>\n</tr>");
+    }
+    out.println("<tr>\n<td>");
+    out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" VALUE=\"Checkout\">\n");
+    out.println("</td>\n</tr>");
     out.println("</table>");
 
     out.println("</aside>");
