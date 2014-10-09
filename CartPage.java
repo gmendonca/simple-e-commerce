@@ -7,47 +7,72 @@ import java.util.*;
 
 public class CartPage extends HttpServlet {
   private String item;
+  private String remove;
   private String title;
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    
+
     PrintWriter out = response.getWriter();
     title = "Shopping Cart";
 
+    HttpSession session = request.getSession(true);
+
     item = request.getParameter("item");
 
-    String[] justItem = item.split("\\s+");
-    if(justItem.length == 2) item = justItem[1];
-    else item = justItem[1] + justItem[2];
-    out.println("item = " + item);
-    HttpSession session = request.getSession(true);
-    Integer countOrder = (Integer)session.getAttribute(item);
-
-    if (countOrder == null) {
-        countOrder = new Integer(1);
-    } else {
-      countOrder = new Integer(countOrder.intValue() + 1);
-    }
-    session.setAttribute(item, countOrder);
-    out.println("countOrder = " + countOrder);
-
     String cartElements = (String)session.getAttribute("cart");
-    if (cartElements == null) {
-        cartElements = new String(item);
-    } else {
-        Boolean newItem = true;
+
+    if(item != null){
+        String[] justItem = item.split("\\s+");
+        if(justItem.length == 2) item = justItem[1];
+        else item = justItem[1] + justItem[2];
+
+        Integer countOrder = (Integer)session.getAttribute(item);
+
+        if (countOrder == null) {
+            countOrder = new Integer(1);
+        } else {
+          countOrder = new Integer(countOrder.intValue() + 1);
+        }
+        session.setAttribute(item, countOrder);
+
+        if (cartElements == null) {
+            cartElements = new String(item);
+        } else {
+            Boolean newItem = true;
+            String delims = "[|]";
+            String[] tokens = cartElements.split(delims);
+            for(int i = 0; i < tokens.length; i++){
+                if(item.compareTo(tokens[i]) == 0){
+                    newItem = false;
+                    break;
+                }
+            }
+            if(newItem) cartElements = new String(item + "|" + cartElements);
+        }
+        session.setAttribute("cart", cartElements);
+    }
+
+    remove = request.getParameter("remove");
+
+    if(remove != null){
+        String[] justRemove = remove.split("\\s+");
+        if(justRemove.length == 2) remove = justRemove[1];
+        else remove = justRemove[1] + justRemove[2];
+
         String delims = "[|]";
         String[] tokens = cartElements.split(delims);
+        cartElements = new String();
         for(int i = 0; i < tokens.length; i++){
-            if(item.compareTo(tokens[i]) == 0){
-                newItem = false;
-                break;
+            if(remove.compareTo(tokens[i]) == 0){
+                session.setAttribute(tokens[i], 0);
+            }else{
+                cartElements = new String(tokens[i] + "|" + cartElements); 
             }
         }
-        if(newItem) cartElements = new String(item + "|" + cartElements);
+
+        session.setAttribute("cart", cartElements);
     }
-    session.setAttribute("cart", cartElements);
-    out.println("cartElements = " + cartElements);
+    
     
     response.setContentType("text/html");
     
@@ -112,24 +137,32 @@ public class CartPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
-    
-    out.println("<form action=\"/ecom/Checkout\">");
-    out.println("<table border=\"1\">");
-    String delims = "[|]";
-    String[] tokens = cartElements.split(delims);
-    for (int i = 0; i < tokens.length; i++){
-      out.println("<tr>\n<td>");
-      out.println("<img src=\"img/" + tokens[i] + ".jpg\" alt=\"" + tokens[i] + "\" width=\"50\" heigth=\"50\" >");
-      out.println("</td>\n<td>");
-      out.println((Integer)session.getAttribute(tokens[i]));
-      out.println("</td>\n<td>");
-      out.println("<input id=\"buybutton\" type=\"submit\" name =\"" + tokens[i] + "\" VALUE=\"Remove\">\n");
-      out.println("</td>\n</tr>");
+
+    if(cartElements.compareTo("") == 0){
+        out.println("No items here yet! :(");            
+    }else{
+        out.println("<form action=\"/ecom/CartPage\">");
+        out.println("<table border=\"1\">");
+        String delims = "[|]";
+        String[] tokens = cartElements.split(delims);
+        for (int i = 0; i < tokens.length; i++){
+            out.println("<tr>\n<td>");
+            out.println("<img src=\"img/" + tokens[i] + ".jpg\" alt=\"" + tokens[i] + "\" width=\"50\" heigth=\"50\" >");
+            out.println("</td>\n<td>");
+            out.println((Integer)session.getAttribute(tokens[i]));
+            out.println("</td>\n<td>");
+            out.println("<input id=\"buybutton\" type=\"submit\" name =\"remove\" VALUE=\"Remove " + tokens[i] + "\">\n");
+            out.println("</td>\n</tr>");
+        }
+
+        out.println("<tr>\n<td>");
+        out.println("</form>\n");
+        out.println("<form action=\"/ecom/CheckoutPage\">\n");
+        out.println("<input id=\"buybutton\" type=\"submit\" name =\"checkout\" VALUE=\"Checkout\">\n");
+        out.println("</form>\n");
+        out.println("</td>\n</tr>");
+        out.println("</table>");
     }
-    out.println("<tr>\n<td>");
-    out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" VALUE=\"Checkout\">\n");
-    out.println("</td>\n</tr>");
-    out.println("</table>");
 
     out.println("</aside>");
     out.println("</body>");
