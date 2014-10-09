@@ -5,15 +5,14 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 
-public class ConfirmationPage extends HttpServlet {
-    private String title;
-    private String username;
+public class SignInPage extends HttpServlet {
+  private String title;
+  private String username;
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-    title = "Confirmation";
-
     PrintWriter out = response.getWriter();
+    title = "Sign in";
 
     HttpSession session = request.getSession(true);
     
@@ -84,57 +83,14 @@ public class ConfirmationPage extends HttpServlet {
         "</table>\n" +
         "</form>\n" +
         "</nav>\n" +
-        "<aside>\n");
-
-    String cartElements = (String)session.getAttribute("cart");
-
-    if(cartElements.compareTo("") == 0){
-        out.println("<form action=\"/ecom/HomePage\">\n");
-    out.println("<p>Oh no, something is not right! There are no products in your Cart! Try to buy something first!\n");
-    out.println("<br><input id=\"buybutton\" type=\"submit\" name =\"back\" VALUE=\"OK\">\n");
+        "<aside>\n" +
+        "<h1 align=\"center\">" + title + "</h1>");
+    out.println("<form action=\"/ecom/HomePage\" method=\"post\">\n");
+    out.println("Username: <input type=\"text\" name=\"username\"><br>\n");
+    out.println("<input id=\"buybutton\" type=\"submit\" name =\"confirm\" VALUE=\"OK\">\n");
     out.println("</form>\n");
-    }else{
-        if(session.getAttribute("username") != null){
-            username = (String)session.getAttribute("username");
-
-            String orders = (String)session.getAttribute("orders");
-
-            out.println("<h2>" + username + ", thank you for you purchase on "+  new Date() + "!</h2>");
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<p>Items:</p>");
-            String delims = "[|]";
-            String[] tokens = cartElements.split(delims);
-
-            for (int i = 0; i < tokens.length; i++){
-                out.println("<p>" + tokens[i] + " - Quantity: " + (Integer)session.getAttribute(tokens[i]) + "</p>");
-                session.setAttribute(tokens[i], 0);
-            }
-
-            cartElements = new String();
-            session.setAttribute("cart", cartElements);
-
-            out.println("<br>");
-            out.println("<br>");
-
-            Double confNumber = (1000000 + (Math.random() * (9999999 - 1000000)));
-            out.println("<h3>Confirmation Number: " + confNumber + "</h3>");
-
-            orders = new String(confNumber + "|" + orders);
-            session.setAttribute("orders", orders);
-
-            long theFuture = System.currentTimeMillis() + (86400 * 14 * 1000);
-            out.println("<h3>Delivery Date: " + new Date(theFuture) + "</h3>");
-        }
-        else{
-            out.println("<form action=\"/ecom/SignInPage\">\n");
-            out.println("<p>Sign in first!</p><br>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"signin\" VALUE=\"Sign In\">\n");
-            out.println("</form>\n");
-        }
-    }
-    out.println("</aside>");
-    out.println("</body>");
-    out.println("</html>");
+    out.println("</aside>\n");
+    out.println("</body>\n");
+    out.println("</html>\n");
   }
 }

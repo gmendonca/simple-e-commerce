@@ -7,6 +7,7 @@ import java.util.*;
 
 public class CheckoutPage extends HttpServlet {
   private String title;
+  private String username;
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
@@ -29,10 +30,10 @@ public class CheckoutPage extends HttpServlet {
         "<table border=\"1\" width=\"100%\">\n" +
         "<tr>\n" +
         "<td width=\"80%\">\n" +
-        "<h1><a href=\"index.html\">Best Deal</a></h1>\n" +
+        "<h1><a href=\"/ecom/HomePage\">Best Deal</a></h1>\n" +
         "</td>\n" +
         "<td width=\"20%\">\n" +
-        "<h4><a href=\"#\">Cart</a></h4>\n" +
+        "<h4><a href=\"/ecom/CartPage\">Cart</a></h4>\n" +
         "</td>\n" +
         "</tr>\n" +
         "</table>\n" +
@@ -43,8 +44,14 @@ public class CheckoutPage extends HttpServlet {
         "<td width=\"30%\">\n" +
         "<a href=\"#\">Weekly Deals</a>\n" +
         "</td>\n" +
-        "<td width=\"30%\">\n" +
-        "<a href=\"#\">Sign in</a>\n" +
+        "<td width=\"30%\">\n");
+    if(session.getAttribute("username") != null){
+        username = (String)session.getAttribute("username");
+        out.println("Hi, <a href=\"/ecom/OrderPage\">" + username + "</a>\n");
+    }else{
+        out.println("<a href=\"/ecom/SignInPage\">Sign in</a>\n");
+    }
+    out.println(
         "</td>\n" +
         "</tr>\n" +
         "</table>\n" +
