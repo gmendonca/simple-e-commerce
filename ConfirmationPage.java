@@ -5,13 +5,11 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 
-public class CheckoutPage extends HttpServlet {
-  private String title;
+public class ConfirmationPage extends HttpServlet {
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     PrintWriter out = response.getWriter();
-    title = "Checkout";
 
     HttpSession session = request.getSession(true);
     
@@ -78,24 +76,10 @@ public class CheckoutPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
-    out.println("<form action=\"/ecom/ConfirmationPage\">\n");
-    out.println("First name: <input type=\"text\" name=\"firstname\"><br>\n");
-    out.println("Last name: <input type=\"text\" name=\"lastname\"><br>\n");
-
-    out.println("Address Line 1: <input type=\"text\" name=\"address1\"><br>\n");
-    out.println("Address Line 2: <input type=\"text\" name=\"address2\"><br>\n");
-    out.println("City: <input type=\"text\" name=\"city\"><br>\n");
-    out.println("State: <input type=\"text\" name=\"state\"><br>\n");
-    out.println("Zip Code: <input type=\"text\" name=\"zipcode\"><br>\n");
-    out.println("Country: <input type=\"text\" name=\"country\"><br>\n");
-
-    out.println("Credit Card: <input type=\"text\" name=\"creditcard\"><br>\n");
-    out.println("Name Printed: <input type=\"text\" name=\"nameprinted\"><br>\n");
-    out.println("Expiration Date: <input type=\"text\" name=\"expiration\"><br>\n");
-    out.println("CVC: <input type=\"text\" name=\"cvc\"><br>\n");
-
-    out.println("<input id=\"buybutton\" type=\"submit\" name =\"confirm\" VALUE=\"Confirm\">\n");
-    out.println("</form>\n");
+    out.println("<h2>Thank you for you purchase on "+  new Date() + "!<h2>");
+    out.println("<h3>Confirmation Number: " + (1000000 + (Math.random() * (9999999 - 1000000))) + "<h3>");
+    long theFuture = System.currentTimeMillis() + (86400 * 14 * 1000);
+    out.println("<h3>Delivery Date: " + new Date(theFuture) + "<h3>");
     out.println("</aside>");
     out.println("</body>");
     out.println("</html>");
