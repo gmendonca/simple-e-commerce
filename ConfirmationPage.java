@@ -6,8 +6,11 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 
 public class ConfirmationPage extends HttpServlet {
+    private String title;
   
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    title = "Confirmation";
 
     PrintWriter out = response.getWriter();
 
@@ -74,9 +77,26 @@ public class ConfirmationPage extends HttpServlet {
         "</table>\n" +
         "</form>\n" +
         "</nav>\n" +
-        "<aside>\n" +
-        "<h1 align=\"center\">" + title + "</h1>");
+        "<aside>\n");
+
+    String cartElements = (String)session.getAttribute("cart");
     out.println("<h2>Thank you for you purchase on "+  new Date() + "!<h2>");
+    out.println("<br>");
+    out.println("<br>");
+    out.println("<h3>Items:<h3>");
+    String delims = "[|]";
+    String[] tokens = cartElements.split(delims);
+    
+    for (int i = 0; i < tokens.length; i++){
+        out.println("<h3>" + tokens[i] + " - Quantity: " + (Integer)session.getAttribute(tokens[i]) + "<h3>");
+        session.setAttribute(tokens[i], 0);
+    }
+
+    cartElements = new String();
+    session.setAttribute("cart", cartElements);
+
+    out.println("<br>");
+    out.println("<br>");
     out.println("<h3>Confirmation Number: " + (1000000 + (Math.random() * (9999999 - 1000000))) + "<h3>");
     long theFuture = System.currentTimeMillis() + (86400 * 14 * 1000);
     out.println("<h3>Delivery Date: " + new Date(theFuture) + "<h3>");
