@@ -6,8 +6,7 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 
 public class OrderPage extends HttpServlet {
-  private String item;
-  private String remove;
+  private String cancel;
   private String title;
   private String username;
   
@@ -25,12 +24,11 @@ public class OrderPage extends HttpServlet {
 
     if(cancel != null){
         String[] justCancel = cancel.split("\\s+");
-
         String delims = "[|]";
         String[] tokens = orders.split(delims);
         orders = new String();
         for(int i = 0; i < tokens.length; i++){
-            if(justCancel[1] == i - 1){
+            if(Integer.parseInt(justCancel[1]) == (i + 1)){
                 continue;
             }else{
                 orders = new String(tokens[i] + "|" + orders); 
@@ -114,17 +112,17 @@ public class OrderPage extends HttpServlet {
     if(orders.compareTo("") == 0){
         out.println("You don't have any open order!");            
     }else{
-        out.println("<form action=\"/ecom/OrderPage\" method=\"POST\">");
+        out.println("<form action=\"/ecom/OrderPage\">");
         out.println("<table border=\"1\">");
         String delims = "[|]";
         String[] tokens = orders.split(delims);
         for (int i = 0; i < tokens.length; i++){
             out.println("<tr>\n<td>");
-            out.println("Order " + i + 1);
+            out.println("Order " + (i + 1));
             out.println("</td>\n<td>");
             out.println(tokens[i]);
             out.println("</td>\n<td>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"cancel\" VALUE=\"Cancel " + i + 1 + "\">\n");
+            out.println("<input id=\"buybutton\" type=\"submit\" name =\"cancel\" VALUE=\"Cancel " + (i + 1) + "\">\n");
             out.println("</td>\n</tr>");
         }
         out.println("</td>\n</tr>");

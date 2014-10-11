@@ -2,6 +2,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
+import java.text.*;
 
 @SuppressWarnings("unchecked")
 
@@ -9,7 +10,7 @@ public class ConfirmationPage extends HttpServlet {
     private String title;
     private String username;
   
-  public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  public synchronized void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     title = "Confirmation";
 
@@ -99,9 +100,9 @@ public class ConfirmationPage extends HttpServlet {
 
             String orders = (String)session.getAttribute("orders");
 
-            out.println("<h2>" + username + ", thank you for you purchase on "+  new Date() + "!</h2>");
-            out.println("<br>");
-            out.println("<br>");
+            Date date = new Date();
+
+            out.println("<h2>" + username + ", thank you for you purchase on "+  date + "!</h2>");
             out.println("<p>Items:</p>");
             String delims = "[|]";
             String[] tokens = cartElements.split(delims);
@@ -110,6 +111,18 @@ public class ConfirmationPage extends HttpServlet {
                 out.println("<p>" + tokens[i] + " - Quantity: " + (Integer)session.getAttribute(tokens[i]) + "</p>");
                 session.setAttribute(tokens[i], 0);
             }
+
+            String printedName = new String();
+            if(request.getParameter("nameprinted") != null)
+                printedName = (String)request.getParameter("nameprinted");
+            String cardNumber = new String();
+            if(request.getParameter("creditcard") != null)
+                cardNumber = (String)request.getParameter("creditcard");
+
+            out.println("<br>");
+            out.println("<br>");
+            out.println("<p>Bought with the card: " + printedName + " - **** **** **** " + (cardNumber.substring(cardNumber.length() - 4)) + "</p>");
+
 
             cartElements = new String();
             session.setAttribute("cart", cartElements);
@@ -123,8 +136,12 @@ public class ConfirmationPage extends HttpServlet {
             orders = new String(confNumber + "|" + orders);
             session.setAttribute("orders", orders);
 
-            long theFuture = System.currentTimeMillis() + (86400 * 14 * 1000);
-            out.println("<h3>Delivery Date: " + new Date(theFuture) + "</h3>");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_MONTH, 14);
+            date = calendar.getTime();
+
+            SimpleDateFormat s = new SimpleDateFormat("MM/dd/yy");
+            out.println("<h3>Delivery Date: " + s.format(date) + "</h3>");
         }
         else{
             out.println("<form action=\"/ecom/SignInPage\">\n");

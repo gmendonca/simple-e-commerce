@@ -85,7 +85,7 @@ public class CheckoutPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
-    out.println("<form action=\"/ecom/ConfirmationPage\">\n");
+    out.println("<form action=\"/ecom/ConfirmationPage\" method=\"POST\">\n");
     out.println("First name: <input type=\"text\" name=\"firstname\"><br>\n");
     out.println("Last name: <input type=\"text\" name=\"lastname\"><br>\n");
 
