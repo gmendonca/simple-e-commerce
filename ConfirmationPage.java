@@ -91,64 +91,68 @@ public class ConfirmationPage extends HttpServlet {
 
     if(cartElements.compareTo("") == 0){
         out.println("<form action=\"/ecom/HomePage\">\n");
-    out.println("<p>Oh no, something is not right! There are no products in your Cart! Try to buy something first!\n");
-    out.println("<br><input id=\"buybutton\" type=\"submit\" name =\"back\" VALUE=\"OK\">\n");
-    out.println("</form>\n");
+        out.println("<p>Oh no, something is not right! There are no products in your Cart! Try to buy something first!\n");
+        out.println("<br><input id=\"buybutton\" type=\"submit\" name =\"back\" VALUE=\"OK\">\n");
+        out.println("</form>\n");
     }else{
-        if(session.getAttribute("username") != null){
-            username = (String)session.getAttribute("username");
+        username = (String)session.getAttribute("username");
 
-            String orders = (String)session.getAttribute("orders");
+        String orders = (String)session.getAttribute("orders");
 
-            Date date = new Date();
+        Date date = new Date();
 
-            out.println("<h2>" + username + ", thank you for you purchase on "+  date + "!</h2>");
-            out.println("<p>Items:</p>");
-            String delims = "[|]";
-            String[] tokens = cartElements.split(delims);
+        out.println("<h2>" + username + ", thank you for you purchase on "+  date + "!</h2>");
+        out.println("<p>Items:</p>");
+        String delims = "[|]";
+        String[] tokens = cartElements.split(delims);
 
-            for (int i = 0; i < tokens.length; i++){
-                out.println("<p>" + tokens[i] + " - Quantity: " + (Integer)session.getAttribute(tokens[i]) + "</p>");
-                session.setAttribute(tokens[i], 0);
-            }
-
-            String printedName = new String();
-            if(request.getParameter("nameprinted") != null)
-                printedName = (String)request.getParameter("nameprinted");
-            String cardNumber = new String();
-            if(request.getParameter("creditcard") != null)
-                cardNumber = (String)request.getParameter("creditcard");
-
-            out.println("<br>");
-            out.println("<br>");
-            out.println("<p>Bought with the card: " + printedName + " - **** **** **** " + (cardNumber.substring(cardNumber.length() - 4)) + "</p>");
-
-
-            cartElements = new String();
-            session.setAttribute("cart", cartElements);
-
-            out.println("<br>");
-            out.println("<br>");
-
-            Double confNumber = (1000000 + (Math.random() * (9999999 - 1000000)));
-            out.println("<h3>Confirmation Number: " + confNumber + "</h3>");
-
-            orders = new String(confNumber + "|" + orders);
-            session.setAttribute("orders", orders);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_MONTH, 14);
-            date = calendar.getTime();
-
-            SimpleDateFormat s = new SimpleDateFormat("MM/dd/yy");
-            out.println("<h3>Delivery Date: " + s.format(date) + "</h3>");
+        for (int i = 0; i < tokens.length; i++){
+            out.println("<p>" + tokens[i] + " - Quantity: " + (Integer)session.getAttribute(tokens[i]) + "</p>");
+            session.setAttribute(tokens[i], 0);
         }
-        else{
-            out.println("<form action=\"/ecom/SignInPage\">\n");
-            out.println("<p>Sign in first!</p><br>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"signin\" VALUE=\"Sign In\">\n");
-            out.println("</form>\n");
+
+        String printedName = new String();
+        if(request.getParameter("nameprinted") != null)
+            printedName = (String)request.getParameter("nameprinted");
+        String cardNumber = new String();
+        if(request.getParameter("creditcard") != null)
+            cardNumber = (String)request.getParameter("creditcard");
+
+        out.println("<br>");
+        out.println("<br>");
+        out.println("<p>Bought with the card: " + printedName + " - **** **** **** " + (cardNumber.substring(cardNumber.length() - 4)) + "</p>");
+
+
+        cartElements = new String();
+        session.setAttribute("cart", cartElements);
+
+        out.println("<br>");
+        out.println("<br>");
+
+        Double confNumber = (1000000 + (Math.random() * (9999999 - 1000000)));
+        out.println("<h3>Confirmation Number: " + confNumber + "</h3>");
+
+        orders = new String(confNumber + "|" + orders);
+        session.setAttribute("orders", orders);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, 14);
+        date = calendar.getTime();
+
+        SimpleDateFormat s = new SimpleDateFormat("MM/dd/yy");
+        out.println("<h3>Delivery Date: " + s.format(date) + "</h3>");
+
+        int days = 5;
+        for(int i = 0; i < days;){
+            calendar.add(Calendar.DAY_OF_MONTH, -1);
+            
+            if(calendar.get(Calendar.DAY_OF_WEEK) <= 6 && calendar.get(Calendar.DAY_OF_WEEK) >= 2)
+                i++;
         }
+
+        date = calendar.getTime();
+        session.setAttribute(String.valueOf(confNumber), date);
+        
     }
     out.println("</aside>");
     out.println("</body>");

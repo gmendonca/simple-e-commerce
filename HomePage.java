@@ -132,7 +132,7 @@ public class HomePage extends HttpServlet {
         "<td width=\"30%\">\n");
     if(session.getAttribute("username") != null){
         username = (String)session.getAttribute("username");
-        out.println("Hi, <a href=\"#\">" + username + "</a>\n");
+        out.println("Hi, <a href=\"/ecom/OrderPage\">" + username + "</a>\n");
     }else{
         out.println("<a href=\"/ecom/SignInPage\">Sign in</a>\n");
     }

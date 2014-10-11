@@ -2,6 +2,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.util.*;
+import java.text.*;
 
 @SuppressWarnings("unchecked")
 
@@ -82,7 +83,7 @@ public class OrderPage extends HttpServlet {
     out.println(
         "<nav>\n" +
         "<form action=\"/ecom/CatalogPage\">\n" +
-        "<table>\n" +
+        "<table align=\"center\">\n" +
         "<tr>\n" +
         "<td>\n" +
         "<input id=\"button\" type=\"submit\" name =\"product\" VALUE=\"Phones\">\n" +
@@ -108,6 +109,9 @@ public class OrderPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
+    Date d =new Date();
+    SimpleDateFormat s = new SimpleDateFormat("MM/dd/yy");
+    out.println("<p align=\"center\"> Today's date: " + s.format(d) + "</p>");
 
     if(orders.compareTo("") == 0){
         out.println("You don't have any open order!");            
@@ -122,10 +126,26 @@ public class OrderPage extends HttpServlet {
             out.println("</td>\n<td>");
             out.println(tokens[i]);
             out.println("</td>\n<td>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"cancel\" VALUE=\"Cancel " + (i + 1) + "\">\n");
-            out.println("</td>\n</tr>");
+            out.println("Cancelation date until: ");
+            out.println("</td>\n<td>");
+
+            Date date = new Date();
+            if(session.getAttribute(tokens[i]) != null) date = (Date)session.getAttribute(tokens[i]);
+            out.println(s.format(date));
+
+            out.println("</td>\n");
+
+            //Calendar calendar = Calendar.getInstance();
+            //calendar.add(Calendar.DAY_OF_MONTH, 10);
+            //d = calendar.getTime();
+            
+            if (d.compareTo(date) <= 0){
+                out.println("<td>\n");
+                out.println("<input id=\"buybutton\" type=\"submit\" name =\"cancel\" VALUE=\"Cancel " + (i + 1) + "\">\n");
+                out.println("</td>\n");
+            }
         }
-        out.println("</td>\n</tr>");
+        out.println("</tr>");
         out.println("</table>");
     }
 

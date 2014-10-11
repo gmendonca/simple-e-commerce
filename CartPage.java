@@ -150,7 +150,7 @@ public class CartPage extends HttpServlet {
         out.println("No items here yet! :(");            
     }else{
         out.println("<form action=\"/ecom/CartPage\">");
-        out.println("<table border=\"1\">");
+        out.println("<table align=\"center\" border=\"1\">");
         String delims = "[|]";
         String[] tokens = cartElements.split(delims);
         for (int i = 0; i < tokens.length; i++){

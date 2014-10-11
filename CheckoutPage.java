@@ -85,24 +85,31 @@ public class CheckoutPage extends HttpServlet {
         "</nav>\n" +
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
-    out.println("<form action=\"/ecom/ConfirmationPage\" method=\"POST\">\n");
-    out.println("First name: <input type=\"text\" name=\"firstname\"><br>\n");
-    out.println("Last name: <input type=\"text\" name=\"lastname\"><br>\n");
+    if(session.getAttribute("username") != null){
+        out.println("<form action=\"/ecom/ConfirmationPage\" method=\"POST\">\n");
+        out.println("First name: <input type=\"text\" name=\"firstname\"><br>\n");
+        out.println("Last name: <input type=\"text\" name=\"lastname\"><br>\n");
 
-    out.println("Address Line 1: <input type=\"text\" name=\"address1\"><br>\n");
-    out.println("Address Line 2: <input type=\"text\" name=\"address2\"><br>\n");
-    out.println("City: <input type=\"text\" name=\"city\"><br>\n");
-    out.println("State: <input type=\"text\" name=\"state\"><br>\n");
-    out.println("Zip Code: <input type=\"text\" name=\"zipcode\"><br>\n");
-    out.println("Country: <input type=\"text\" name=\"country\"><br>\n");
+        out.println("Address Line 1: <input type=\"text\" name=\"address1\"><br>\n");
+        out.println("Address Line 2: <input type=\"text\" name=\"address2\"><br>\n");
+        out.println("City: <input type=\"text\" name=\"city\"><br>\n");
+        out.println("State: <input type=\"text\" name=\"state\"><br>\n");
+        out.println("Zip Code: <input type=\"text\" name=\"zipcode\"><br>\n");
+        out.println("Country: <input type=\"text\" name=\"country\"><br>\n");
 
-    out.println("Credit Card: <input type=\"text\" name=\"creditcard\"><br>\n");
-    out.println("Name Printed: <input type=\"text\" name=\"nameprinted\"><br>\n");
-    out.println("Expiration Date: <input type=\"text\" name=\"expiration\"><br>\n");
-    out.println("CVC: <input type=\"text\" name=\"cvc\"><br>\n");
+        out.println("Credit Card: <input type=\"text\" name=\"creditcard\"><br>\n");
+        out.println("Name Printed: <input type=\"text\" name=\"nameprinted\"><br>\n");
+        out.println("Expiration Date: <input type=\"text\" name=\"expiration\"><br>\n");
+        out.println("CVC: <input type=\"text\" name=\"cvc\"><br>\n");
 
-    out.println("<input id=\"buybutton\" type=\"submit\" name =\"confirm\" VALUE=\"Confirm\">\n");
-    out.println("</form>\n");
+        out.println("<input id=\"buybutton\" type=\"submit\" name =\"confirm\" VALUE=\"Confirm\">\n");
+        out.println("</form>\n");
+    }else{
+        out.println("<form action=\"/ecom/SignInPage\">\n");
+        out.println("<p>Sign in first!</p><br>");
+        out.println("<input id=\"buybutton\" type=\"submit\" name =\"signin\" VALUE=\"Sign In\">\n");
+        out.println("</form>\n");
+    }
     out.println("</aside>");
     out.println("</body>");
     out.println("</html>");
