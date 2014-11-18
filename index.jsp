@@ -3,7 +3,7 @@
 	<head>
 		<title>Best Deal</title>
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
-		<script type="text/javascript" src="javascript.js"></script>
+		<script type="text/javascript" src="javascript/javascript.js"></script>
 	</head>
 	<body onload="init()">
 		<header>
@@ -27,7 +27,7 @@
 						<table border="0" cellpadding="5">
 							<tbody>
 							<tr>
-								<td><strong>Composer Name:</strong></td>
+								<td><strong>Search:</strong></td>
 											<td>
 												<input type="text"
 										size="40"
@@ -37,7 +37,7 @@
 							</tr>
 							<tr>
 								<td id="auto-row" colspan="2">
-									<table id="complete-table" class="popupBox" />
+									<table id="complete-table" class="popupBox"></table>
 								</td>
 							</tr>
 							</tbody>

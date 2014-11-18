@@ -22,9 +22,6 @@
   version="3.0"
   metadata-complete="true">
 
-
-
-
     <servlet>
         <servlet-name>CatalogPage</servlet-name>
         <servlet-class>CatalogPage</servlet-class>
@@ -82,5 +79,21 @@
         <servlet-name>OrderPage</servlet-name>
         <url-pattern>/OrderPage</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <servlet-class>AutoCompleteServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AutoCompleteServlet</servlet-name>
+        <url-pattern>/autocomplete</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 
 </web-app>

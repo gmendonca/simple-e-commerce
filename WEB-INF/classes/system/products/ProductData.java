@@ -4,10 +4,10 @@ import java.util.*;
 
 public class ProductData {
 
-    private HashMap products = new HashMap());
+    private HashMap<String, Product> products = new HashMap<String, Product>();
 
 
-    public HashMap getProducts() {
+    public HashMap<String, Product> getProducts() {
         return products;
     }
 

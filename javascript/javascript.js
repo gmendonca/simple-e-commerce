@@ -100,20 +100,18 @@ function parseMessages(responseXML) {
         return false;
     } else {
 
-        var composers = responseXML.getElementsByTagName("composers")[0];
+        var products = responseXML.getElementsByTagName("products")[0];
 
-        if (composers.childNodes.length > 0) {
+        if (products.childNodes.length > 0) {
             completeTable.setAttribute("bordercolor", "black");
             completeTable.setAttribute("border", "1");
 
-            for (loop = 0; loop < composers.childNodes.length; loop++) {
-                var composer = composers.childNodes[loop];
-                var firstName = composer.getElementsByTagName("firstName")[0];
-                var lastName = composer.getElementsByTagName("lastName")[0];
-                var composerId = composer.getElementsByTagName("id")[0];
-                appendComposer(firstName.childNodes[0].nodeValue,
-                    lastName.childNodes[0].nodeValue,
-                    composerId.childNodes[0].nodeValue);
+            for (loop = 0; loop < products.childNodes.length; loop++) {
+                var product = products.childNodes[loop];
+                var productName = product.getElementsByTagName("productName")[0];
+                var productId = product.getElementsByTagName("id")[0];
+                appendProduct(productName.childNodes[0].nodeValue,
+                    productId.childNodes[0].nodeValue);
             }
         }
     }

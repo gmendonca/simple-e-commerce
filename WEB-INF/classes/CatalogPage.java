@@ -100,12 +100,12 @@ public class CatalogPage extends HttpServlet {
     out.println("<table border=\"1\"");
       while(i.hasNext()) {
          Map.Entry me = (Map.Entry)i.next();
-         String comp = (String)me.getValue();
-         if(title.compareTo(comp) == 0){
+         Product comp = (Product)me.getValue();
+         if(title.compareTo(comp.getCategory()) == 0){
             out.println("<tr>\n<td>");
-            out.println("<img src=\"img/" + ((String)me.getKey()).replaceAll("\\s+","") + ".jpg\" alt=\"" + ((String)me.getKey()) + "\" width=\"50\" heigth=\"50\" >");
+            out.println(comp.getProductName());
             out.println("</td>\n<td>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + ((String)me.getKey()) + "\">\n");
+            out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + comp.getProductName() + "\">\n");
             out.println("</td>\n</tr>");
          }
       }
