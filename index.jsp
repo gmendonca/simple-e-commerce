@@ -3,8 +3,9 @@
 	<head>
 		<title>Best Deal</title>
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
+		<script type="text/javascript" src="javascript.js"></script>
 	</head>
-	<body>
+	<body onload="init()">
 		<header>
 			<table border="1" width="100%">
 				<tr>
@@ -18,10 +19,30 @@
 			</table>
 			<table border="1" width="100%">
 				<tr>
-					<td width="40%">
-					</td>
 					<td width="30%">
 						<a href="#">Weekly Deals</a>
+					</td>
+					<td width="40%">
+						<form name="autofillform" action="autocomplete">
+						<table border="0" cellpadding="5">
+							<tbody>
+							<tr>
+								<td><strong>Composer Name:</strong></td>
+											<td>
+												<input type="text"
+										size="40"
+										id="complete-field"
+													onkeyup="doCompletion()">
+											</td>
+							</tr>
+							<tr>
+								<td id="auto-row" colspan="2">
+									<table id="complete-table" class="popupBox" />
+								</td>
+							</tr>
+							</tbody>
+						</table>
+						</form>
 					</td>
 					<td width="30%">
 						<a href="/ecom/SignInPage">Sign in</a>
@@ -62,4 +83,3 @@
 		</aside>
 	</body>
 <html>
-
