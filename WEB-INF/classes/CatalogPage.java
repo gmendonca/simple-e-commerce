@@ -20,7 +20,12 @@ public class CatalogPage extends HttpServlet {
 
     HttpSession session = request.getSession(true);
 
-    title = request.getParameter("product");
+    if(request.getParameter("product") != null) {
+        title = request.getParameter("product");
+    }else {
+        title = ((Product)request.getAttribute("product")).getCategory();
+    }
+
 
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
@@ -30,8 +35,9 @@ public class CatalogPage extends HttpServlet {
         "<head>\n" +
         "<title>" + title + "</title>\n" +
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/styles.css\">" +
+        "<script type=\"text/javascript\" src=\"javascript/javascript.js\"></script>\n" +
         "</head>\n" +
-        "<body>\n" +
+        "<body onload=\"init()\">\n" +
         "<header>\n" +
         "<table border=\"1\" width=\"100%\">\n" +
         "<tr>\n" +
@@ -46,9 +52,26 @@ public class CatalogPage extends HttpServlet {
         "<table border=\"1\" width=\"100%\">\n" +
         "<tr>\n" +
         "<td width=\"40%\">\n" +
+        "<a href=\"#\">Weekly Deals</a>\n" +
         "</td>\n" +
         "<td width=\"30%\">\n" +
-        "<a href=\"#\">Weekly Deals</a>\n" +
+        "<form name=\"autofillform\" action=\"autocomplete\">" +
+        "<table border=\"0\" cellpadding=\"5\">" +
+        "<tbody>" +
+        "<tr>" +
+        "<td><strong>Search:</strong></td>" +
+        "<td>" +
+        "<input type=\"text\" size=\"40\" id=\"complete-field\" autocomplete=\"off\" onkeyup=\"doCompletion()\">" +
+        "</td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td id=\"auto-row\" colspan=\"2\">" +
+        "<table id=\"complete-table\" class=\"popupBox\"></table>" +
+        "</td>" +
+        "</tr>" +
+        "</tbody>" +
+        "</table>" +
+        "</form>\n" +
         "</td>\n" +
         "<td width=\"30%\">\n");
     if(session.getAttribute("username") != null){

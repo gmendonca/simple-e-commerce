@@ -10,7 +10,7 @@ public class AutoCompleteServlet extends HttpServlet {
 
     private ServletContext context;
     private ProductData prodData = new ProductData();
-    private HashMap<String, Product> products = prodData.getProducts();
+    private HashMap products = prodData.getProducts();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -29,7 +29,7 @@ public class AutoCompleteServlet extends HttpServlet {
         if (targetId != null) {
             targetId = targetId.trim().toLowerCase();
         } else {
-            context.getRequestDispatcher("/error.jsp").forward(request, response);
+            context.getRequestDispatcher("/index.jsp").forward(request, response);
         }
 
         boolean namesAdded = false;
@@ -59,7 +59,7 @@ public class AutoCompleteServlet extends HttpServlet {
             if (namesAdded) {
                 response.setContentType("text/xml");
                 response.setHeader("Cache-Control", "no-cache");
-                response.getWriter().write("<product>" + sb.toString() + "</product>");
+                response.getWriter().write("<products>" + sb.toString() + "</products>");
             } else {
                 //nothing to show
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
@@ -71,7 +71,7 @@ public class AutoCompleteServlet extends HttpServlet {
 
             if ((targetId != null) && products.containsKey(targetId.trim())) {
                 request.setAttribute("product", products.get(targetId));
-                context.getRequestDispatcher("/product.jsp").forward(request, response);
+                context.getRequestDispatcher("/CatalogPage").forward(request, response);
             }
         }
     }

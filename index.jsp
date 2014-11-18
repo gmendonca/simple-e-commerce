@@ -29,10 +29,7 @@
 							<tr>
 								<td><strong>Search:</strong></td>
 											<td>
-												<input type="text"
-										size="40"
-										id="complete-field"
-													onkeyup="doCompletion()">
+												<input type="text" size="40" id="complete-field" autocomplete="off" onkeyup="doCompletion()">
 											</td>
 							</tr>
 							<tr>

@@ -10,7 +10,7 @@ public class OrderPage extends HttpServlet {
   private String cancel;
   private String title;
   private String username;
-  
+
   public synchronized void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     PrintWriter out = response.getWriter();
@@ -32,24 +32,25 @@ public class OrderPage extends HttpServlet {
             if(Integer.parseInt(justCancel[1]) == (i + 1)){
                 continue;
             }else{
-                orders = new String(tokens[i] + "|" + orders); 
+                orders = new String(tokens[i] + "|" + orders);
             }
         }
 
         session.setAttribute("orders", orders);
     }
-    
-    
+
+
     response.setContentType("text/html");
-    
+
     String docType = "<!DOCTYPE html>";
     out.println(docType +
         "<html>\n" +
         "<head>\n" +
         "<title>" + title + "</title>\n" +
         "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/styles.css\">" +
+        "<script type=\"text/javascript\" src=\"javascript/javascript.js\"></script>\n" +
         "</head>\n" +
-        "<body>\n" +
+        "<body onload=\"init()\">\n" +
         "<header>\n" +
         "<table border=\"1\" width=\"100%\">\n" +
         "<tr>\n" +
@@ -64,9 +65,26 @@ public class OrderPage extends HttpServlet {
         "<table border=\"1\" width=\"100%\">\n" +
         "<tr>\n" +
         "<td width=\"40%\">\n" +
+        "<a href=\"#\">Weekly Deals</a>\n" +
         "</td>\n" +
         "<td width=\"30%\">\n" +
-        "<a href=\"#\">Weekly Deals</a>\n" +
+        "<form name=\"autofillform\" action=\"autocomplete\">" +
+        "<table border=\"0\" cellpadding=\"5\">" +
+        "<tbody>" +
+        "<tr>" +
+        "<td><strong>Search:</strong></td>" +
+        "<td>" +
+        "<input type=\"text\" size=\"40\" id=\"complete-field\" autocomplete=\"off\" onkeyup=\"doCompletion()\">" +
+        "</td>" +
+        "</tr>" +
+        "<tr>" +
+        "<td id=\"auto-row\" colspan=\"2\">" +
+        "<table id=\"complete-table\" class=\"popupBox\"></table>" +
+        "</td>" +
+        "</tr>" +
+        "</tbody>" +
+        "</table>" +
+        "</form>\n" +
         "</td>\n" +
         "<td width=\"30%\">\n");
     if(session.getAttribute("username") != null){
@@ -119,7 +137,7 @@ public class OrderPage extends HttpServlet {
     out.println("<p align=\"center\"> Today's date: " + s.format(d) + "</p>");
 
     if(orders.compareTo("") == 0){
-        out.println("You don't have any open order!");            
+        out.println("You don't have any open order!");
     }else{
         out.println("<form action=\"/ecom/OrderPage\">");
         out.println("<table border=\"1\">");
@@ -139,7 +157,7 @@ public class OrderPage extends HttpServlet {
             out.println(s.format(date));
 
             out.println("</td>\n");
-            
+
             if (d.compareTo(date) <= 0){
                 out.println("<td>\n");
                 out.println("<input id=\"buybutton\" type=\"submit\" name =\"cancel\" VALUE=\"Cancel " + (i + 1) + "\">\n");
