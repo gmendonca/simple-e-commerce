@@ -149,7 +149,7 @@ public class ConfirmationPage extends HttpServlet {
             if(calendar.get(Calendar.DAY_OF_WEEK) <= 6 && calendar.get(Calendar.DAY_OF_WEEK) >= 2)
                 i++;
         }
-
+        //calendar.add(Calendar.DAY_OF_MONTH, 8);
         date = calendar.getTime();
         session.setAttribute(String.valueOf(confNumber), date);
         

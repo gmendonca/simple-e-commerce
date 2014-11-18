@@ -110,6 +110,11 @@ public class OrderPage extends HttpServlet {
         "<aside>\n" +
         "<h1 align=\"center\">" + title + "</h1>");
     Date d =new Date();
+
+    //Calendar calendar = Calendar.getInstance();
+    //calendar.add(Calendar.DAY_OF_MONTH, 10);
+    //d = calendar.getTime();
+
     SimpleDateFormat s = new SimpleDateFormat("MM/dd/yy");
     out.println("<p align=\"center\"> Today's date: " + s.format(d) + "</p>");
 
@@ -134,10 +139,6 @@ public class OrderPage extends HttpServlet {
             out.println(s.format(date));
 
             out.println("</td>\n");
-
-            //Calendar calendar = Calendar.getInstance();
-            //calendar.add(Calendar.DAY_OF_MONTH, 10);
-            //d = calendar.getTime();
             
             if (d.compareTo(date) <= 0){
                 out.println("<td>\n");
