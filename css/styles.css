@@ -32,3 +32,7 @@ aside {
   text-decoration: none;
   font-size: 1.2em;
 }
+
+.popupItem:hover {
+  text-decoration: underline;
+}

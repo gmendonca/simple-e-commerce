@@ -10,7 +10,8 @@ public class CatalogPage extends HttpServlet {
   private String title;
   private String username;
   private ProductData prodData;
-  private HashMap catalog;
+  private HashMap<String, Product> catalog;
+  private Product searchedProduct;
 
 
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -20,10 +21,12 @@ public class CatalogPage extends HttpServlet {
 
     HttpSession session = request.getSession(true);
 
+    searchedProduct = null;
     if(request.getParameter("product") != null) {
         title = request.getParameter("product");
     }else {
-        title = ((Product)request.getAttribute("product")).getCategory();
+        searchedProduct = (Product)request.getAttribute("product");
+        title = searchedProduct.getCategory();
     }
 
 
@@ -118,21 +121,48 @@ public class CatalogPage extends HttpServlet {
     Set set = catalog.entrySet();
     Iterator i = set.iterator();
 
-
     out.println("<form action=\"/ecom/CartPage\">");
-    out.println("<table border=\"1\"");
-      while(i.hasNext()) {
-         Map.Entry me = (Map.Entry)i.next();
-         Product comp = (Product)me.getValue();
-         if(title.compareTo(comp.getCategory()) == 0){
-            out.println("<tr>\n<td>");
-            out.println(comp.getProductName());
-            out.println("</td>\n<td>");
-            out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + comp.getProductName() + "\">\n");
-            out.println("</td>\n</tr>");
-         }
-      }
+    if(searchedProduct == null){
+        out.println("<table border=\"1\"");
+          while(i.hasNext()) {
+             Map.Entry me = (Map.Entry)i.next();
+             Product comp = (Product)me.getValue();
+             if(title.compareTo(comp.getCategory()) == 0){
+                out.println("<tr>\n<td>");
+                out.println(comp.getProductName());
+                out.println("</td>\n<td>");
+                out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + comp.getProductName() + "\">\n");
+                out.println("</td>\n</tr>");
+             }
+          }
+    } else {
+        out.println("<table border=\"1\"");
+        out.println("<tr>\n<td>");
+        out.println(searchedProduct.getProductName());
+        out.println("</td>\n<td>");
+        out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + searchedProduct.getProductName() + "\">\n");
+        out.println("</td>\n</tr>");
+        out.println("</table>");
+        if(title.substring(title.length() - 1).compareTo("s") == 0)
+            out.println("<br><p> More " + title + ": </p><br>");
+        else
+            out.println("<br><p> More " + title + "s: </p><br>");
+        out.println("<table border=\"1\"");
+          while(i.hasNext()) {
+             Map.Entry me = (Map.Entry)i.next();
+             Product comp = (Product)me.getValue();
+             if(title.compareTo(comp.getCategory()) == 0){
+                if(comp.getProductName().compareTo(searchedProduct.getProductName()) == 0) continue;
+                out.println("<tr>\n<td>");
+                out.println(comp.getProductName());
+                out.println("</td>\n<td>");
+                out.println("<input id=\"buybutton\" type=\"submit\" name =\"item\" label=\"ok\" value=\"Buy " + comp.getProductName() + "\">\n");
+                out.println("</td>\n</tr>");
+             }
+          }
+    }
     out.println("</table>");
+    out.println("</form>");
 
     out.println("</aside>");
     out.println("</body>");

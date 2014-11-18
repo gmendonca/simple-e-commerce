@@ -10,7 +10,7 @@ public class AutoCompleteServlet extends HttpServlet {
 
     private ServletContext context;
     private ProductData prodData = new ProductData();
-    private HashMap products = prodData.getProducts();
+    private HashMap<String, Product> products = prodData.getProducts();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
